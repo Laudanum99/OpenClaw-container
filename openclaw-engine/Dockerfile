@@ -1,6 +1,8 @@
 # Ultimate Edition Dockerfile for OpenClaw Engine
 FROM node:22-bookworm-slim
 
+LABEL maintainer="MAGI <admin@magi.com>"
+
 # Install system dependencies
 # We maintain Apt lists only during the build to keep the image small
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -26,8 +28,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-wqy-zenhei \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install OpenClaw globally
-RUN npm install -g openclaw@latest
+# Install OpenClaw globally with versioning and cache cleaning
+ARG OPENCLAW_VERSION=latest
+RUN npm install -g openclaw@${OPENCLAW_VERSION} && npm cache clean --force
 
 # Set environment variables for Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -40,6 +43,10 @@ WORKDIR /home/node/app
 
 # Copy entrypoint script (assuming it's in the same directory as Dockerfile)
 COPY --chown=node:node entrypoint.sh /home/node/app/entrypoint.sh
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/ || exit 1
 
 # Entrypoint setup
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "/home/node/app/entrypoint.sh"]

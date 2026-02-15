@@ -5,6 +5,14 @@ set -e
 DATA_DIR="/home/node/app/data"
 CONFIG_FILE="$DATA_DIR/config.json"
 
+# Critical Permission Check
+# We verify if the current user (node) has write permissions on $DATA_DIR
+if [ ! -w "$DATA_DIR" ]; then
+    echo "CRITICAL ERROR: The data directory '$DATA_DIR' is not writable by the current user (uid=$(id -u))."
+    echo "Please ensure the host volume is mounted with correct permissions (e.g., chown 1000:1000)."
+    exit 1
+fi
+
 # Volume Initialization
 # If the data directory is empty, we initialize the structure
 if [ -z "$(ls -A "$DATA_DIR" 2>/dev/null)" ]; then
@@ -50,4 +58,5 @@ echo "Configuration generated."
 
 # Execute OpenClaw
 echo "Starting OpenClaw Gateway..."
-exec openclaw gateway --config "$CONFIG_FILE" --port 3000
+# Pass through any additional arguments to the gateway
+exec openclaw gateway --config "$CONFIG_FILE" --port 3000 "$@"
