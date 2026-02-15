@@ -55,6 +55,10 @@ cat <<EOF > "$CONFIG_FILE"
   "agent": {
     "workspace": "$DATA_DIR/workspace",
     "memory": "$DATA_DIR/memory"
+  },
+  "plugins": {
+    "@openclaw/plugin-browser": { "enabled": true },
+    "@openclaw/plugin-code-interpreter": { "enabled": ${ENABLE_CODE_INTERPRETER:-true} }
   }
 }
 EOF

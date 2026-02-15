@@ -29,11 +29,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tzdata \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install Essential Python Libraries for AI Agents
+RUN pip3 install --no-cache-dir --break-system-packages \
+    pandas \
+    numpy \
+    matplotlib \
+    requests \
+    beautifulsoup4 \
+    youtube-transcript-api
+
 ENV TZ=UTC
 
 # Install OpenClaw globally with versioning and cache cleaning
 ARG OPENCLAW_VERSION=latest
-RUN npm install -g openclaw@${OPENCLAW_VERSION} && npm cache clean --force
+RUN npm install -g openclaw@${OPENCLAW_VERSION} \
+    @openclaw/plugin-browser \
+    @openclaw/plugin-code-interpreter \
+    && npm cache clean --force
 
 # Set environment variables for Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
