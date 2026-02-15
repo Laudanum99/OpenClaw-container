@@ -42,10 +42,7 @@ ENV TZ=UTC
 
 # Install OpenClaw globally with versioning and cache cleaning
 ARG OPENCLAW_VERSION=latest
-RUN npm install -g openclaw@${OPENCLAW_VERSION} \
-    @openclaw/plugin-browser \
-    @openclaw/plugin-code-interpreter \
-    && npm cache clean --force
+RUN npm install -g openclaw@${OPENCLAW_VERSION} && npm cache clean --force
 
 # Set environment variables for Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -53,6 +50,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 
 # Ensure node user exists and set up app directory
 # The node image usually comes with a 'node' user, but we ensure permissions
+RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
 USER node
 WORKDIR /home/node/app
 
