@@ -69,7 +69,10 @@ cat <<EOF > "$CONFIG_FILE"
   "gateway": {
     "mode": "local",
     "bind": "lan",
-    "port": 3000
+    "port": 3000,
+    "auth": {
+      "token": "${GATEWAY_TOKEN:-magi}"
+    }
   },
   "agents": {
     "defaults": {
