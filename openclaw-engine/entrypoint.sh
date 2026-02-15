@@ -45,7 +45,12 @@ cat <<EOF > "$CONFIG_FILE"
   },
   "browser": {
     "executablePath": "/usr/bin/chromium",
-    "headless": true
+    "headless": true,
+    "args": [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage"
+    ]
   },
   "agent": {
     "workspace": "$DATA_DIR/workspace",

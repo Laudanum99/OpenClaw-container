@@ -26,7 +26,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-liberation \
     fonts-ipafont-gothic \
     fonts-wqy-zenhei \
+    tzdata \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV TZ=UTC
 
 # Install OpenClaw globally with versioning and cache cleaning
 ARG OPENCLAW_VERSION=latest
